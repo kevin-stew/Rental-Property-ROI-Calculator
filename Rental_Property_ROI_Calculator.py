@@ -1,5 +1,3 @@
-import sys, os
-
 class ROIcalc():
     """
     Class to calculate a rental property's potential RIO
@@ -11,7 +9,7 @@ class ROIcalc():
             'Rent': None,
             'Laundry': None,
             'Storage': None,
-            'Misc' : None,
+            'Miscellaneous' : None,
             }
         self.in_list = []
         self.in_monthly = None
@@ -30,7 +28,7 @@ class ROIcalc():
             'Gas' : None,
             'Water' : None,
             'Trash' : None,
-            'Misc' : None,
+            'Miscellaneous' : None,
             }
         self.ex_list = []
         self.ex_monthly = None
@@ -42,51 +40,59 @@ class ROIcalc():
             'Down Payment' : None,
             'Closing Costs' : None,
             'Rehab Budget' : None,
-            'Misc' : None,
+            'Miscellaneous' : None,
             }
 
         self.total_investment = 0  #initial total invenstment var
         self.ccr = None  #cash on cash return
 
+    def int_check(self, dict1, str1):
+        while dict1[str1] == None:
+            var1 = input(f"{str1}: ")
+            if var1.isdigit():
+                dict1[str1] = int(var1)
+            else:
+                print("Please enter a non-decimal number") 
+
     def income(self):
         #income parameters collected here
         print("""
-Enter anticipated monthly sources of income at these prompts.
+Enter anticipated monthly sources of income at these prompts
 (If no income is anticipated enter 0)
                 """)
 
-        self.in_dict['Rent'] = int(input("Rent: "))
-        self.in_dict['Laundry'] = int(input("Laundry: "))
-        self.in_dict['Storage'] = int(input("Storage: "))
-        self.in_dict['Misc'] = int(input("Miscellaneous: "))
+        #prompt for income variables, check that they're intigers, add them to income dict when they are
+        self.int_check(self.in_dict, "Rent")
+        self.int_check(self.in_dict, "Laundry")
+        self.int_check(self.in_dict, "Storage")
+        self.int_check(self.in_dict, "Miscellaneous")
 
         for value in self.in_dict.values():  #get income values into a list
             self.in_list.append(value)
         self.in_monthly = sum(self.in_list)  #stores monthly income as a var
 
-        print(f"Your anticipated total monthly income will be ${self.in_monthly:,}\n")
+        print(f"\nYour anticipated total monthly income will be ${self.in_monthly:,}\n")
 
     def expenses(self):
         #expense parameters collected here
         
         print("""
-Enter anticipated monthly expenses at these prompts.
-(If no income is anticipated enter 0)
+Enter anticipated monthly expenses at these prompts
+(If no expense is anticipated enter 0)
                 """)
-
-        self.ex_dict['Mortgage'] = int(input("Mortgage: "))
-        self.ex_dict['Taxes'] = int(input("Taxes: "))
-        self.ex_dict['Insurance'] = int(input("Insurance: "))
-        self.ex_dict['Repair'] = int(input("Repair: "))
-        self.ex_dict['CapEx'] = int(input("Capital Expenditures: "))
-        self.ex_dict['Property Managment'] = int(input("Property Managment: "))
-        self.ex_dict['Vacancy'] = int(input("Vacancy: "))
-        self.ex_dict['Grounds'] = int(input("Grounds Maintenance: "))
-        self.ex_dict['Electric'] = int(input("Electric: "))
-        self.ex_dict['Gas'] = int(input("Gas: "))
-        self.ex_dict['Water'] = int(input("Water: "))
-        self.ex_dict['Trash'] = int(input("Trash: "))
-        self.ex_dict['Misc'] = int(input("Miscellaneous: "))
+        self.int_check(self.ex_dict, "Mortgage")
+        self.int_check(self.ex_dict, "Taxes")
+        self.int_check(self.ex_dict, "Insurance")
+        self.int_check(self.ex_dict, "Repair")
+        self.int_check(self.ex_dict, "CapEx")
+        self.int_check(self.ex_dict, "Property Managment")
+        self.int_check(self.ex_dict, "Vacancy")
+        self.int_check(self.ex_dict, "Grounds")
+        self.int_check(self.ex_dict, "Electric")
+        self.int_check(self.ex_dict, "Gas")
+        self.int_check(self.ex_dict, "Water")
+        self.int_check(self.ex_dict, "Trash")
+        self.int_check(self.ex_dict, "Miscellaneous")
 
         for value in self.ex_dict.values():  #get expense values into a list
             self.ex_list.append(value)
@@ -98,10 +104,10 @@ Enter anticipated monthly expenses at these prompts.
     def cash_flow(self):
         #cash flow projections calculated here
         if not self.in_list:
-            print("You must enter expected income before continuing to this step.")
+            print("You must enter expected income [1] before continuing to this step.")
                 
         elif not self.ex_list:
-            print("You must enter expected expenses before continuing to this step.")
+            print("You must enter expected expenses [2] before continuing to this step.")
 
         else:      
             self.cashflow_monthly = self.in_monthly - self.ex_monthly #calcs and stores monthly cashflow
@@ -113,34 +119,32 @@ Given that your anticipated monthly:
   Expenses = ${self.ex_monthly:,}
 
 Your anticipated cash flow is: 
-              ${self.cashflow_monthly:,} monthly
-              ${self.cashflow_annual:,} annualy
+              ${self.cashflow_monthly:,}/month
+              ${self.cashflow_annual:,}/year
 """)
 
     def cash_on_cash_return(self):
         if not self.in_list:
-            print("You must enter expected income before continuing to this step.")      
+            print("You must enter expected income [1] before continuing to this step.")      
         elif not self.ex_list:
-            print("You must enter expected expenses before continuing to this step.")
+            print("You must enter expected expenses [2] before continuing to this step.")
         elif self.cashflow_monthly == None:
-            print("You must calculate monthly cashflow before continuing to this step.")
+            print("You must calculate monthly cashflow [3] before continuing to this step.")
         else:
-            print("To calculate your potential Cash-on-Cash Return, I'll need to know a couple more things:")
+            print("\nTo calculate your potential Cash-on-Cash Return, I'll need to know a couple more things:\n")
 
-            self.ccr_dict['Down Payment'] = int(input("Total Down Payment for this property: "))
-            self.ccr_dict['Closing Costs'] = int(input("Total Closing Costs: "))
-            self.ccr_dict['Rehab Budget'] = int(input("Your immediate rennovation budget: "))
-            self.ccr_dict['Misc'] = int(input("Any other miscellaneous purchasing costs: "))
+            self.int_check(self.ccr_dict, "Down Payment")
+            self.int_check(self.ccr_dict, "Closing Costs")
+            self.int_check(self.ccr_dict, "Rehab Budget")
+            self.int_check(self.ccr_dict, "Miscellaneous")
 
             for value in self.ccr_dict.values():
                 self.total_investment += value
 
-            print(f"\nYour total up-front investment on the property will be ${self.total_investment:,}")
+            print(f"\nYour TOTAL up-front investment on the property will be: ${self.total_investment:,}")
 
             self.ccr = (self.cashflow_annual / self.total_investment) * 100
-
-
-            print(f"and you anticipated Cash-on-Cash Return will be {self.ccr:.2f}%")
+            print(f"and you anticipated Cash-on-Cash Return will be: {self.ccr:.2f}%\n")
 
 class Main():
     """Class to run the program, instructions, userinput."""
@@ -151,18 +155,17 @@ class Main():
     def instructions(self):
 
         print(f"""  
--------  Rental Property ROI Calcuator 1.0 ------- 
+--------  Rental Property ROI Calcuator 1.0 -------- 
 
     This program will assist you in determining
-    if the rental property you are considering
-    will be a profitable venture, and if so
-    will calcualte your expected rate of return.
+    if a single rental property you are considering
+    will be a profitable venture.
 
 Please select from the below options:
-    [1] Enter Anticipated Rental Income Variables
+    [1] Enter Anticipated Rental Income sources
     [2] Enter Anticipated Rental Expenses
     [3] Calculate Expected Monthly Cash Flow
-    [4] Calculate Expected Cash on Cash Return 
+    [4] Calculate Expected Cash-on-Cash Return 
     [5] Quit     
 """)
         
@@ -174,7 +177,6 @@ Please select from the below options:
 
             if option == '1':
                 self.user1.income()
-                # os.system ('cls')
             elif option == '2': 
                 self.user1.expenses()
             elif option == '3': 
